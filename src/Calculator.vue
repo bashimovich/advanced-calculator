@@ -1,0 +1,147 @@
+<template>
+	<div :id="id" class="vac-container position-relative w-200 rounded" tabindex="-1">
+		<div class="manual-about-container" @click.self.prevent="open_about = !open_about" :class="{'active': open_about}" >
+			<div class="manual-about-content">
+				<div class="manual-about-header">
+					<div class="vac-dismiss-btn text-center d-flex justify-content-center align-items-center" @click="open_about = !open_about"><i class="fas fa-times"></i></div>
+				</div>
+				<div class="manual-about-body">
+					<p>Student:</p>	
+					<h3>International Oil nad gas university afternaed Yagshygeldi Kakayew</h3>
+					<p>Faculty:</p>	
+					<h3>Digital technoologies and cybersecurity faculty.</h3>
+					<p>Profession:</p>	
+					<h3>4 program engineering.</h3>
+					<p>Head teacher:</p>
+					<h3>Owezgulyyev Serdar</h3>
+				</div>
+			</div>
+		</div>
+		<div class="vac-overlay" :class="{'active': open_sidebar}" @click="open_sidebar = !open_sidebar"></div>
+		<nav class="vac-sidebar d-flex flex-column justify-content-between" :class="{'active': open_sidebar}">
+			<div class="d-flex align-items-center justify-content-between p-3 manual-sidebar-header">
+				<div class="vac-sidebar-header px-1 pt-1 text-center">
+					<h4 class="h5 font-weight-bold vac-sidebar-title">{{ title }}</h4>
+				</div>
+				<div class="vac-dismiss-btn text-center rounded-circle d-flex justify-content-center align-items-center" @click="open_sidebar = !open_sidebar"><i class="fas fa-times"></i></div>
+			</div>
+			<div class="vac-sidebar-menu container">
+				<ul class="list-unstyled w-100">
+					<h5 class="font-weight-bold text-muted h6" style="font-size:3rem;">{{ __vac_translate('calculator') }}</h5>
+					<li><a href="#" :class="{active: mode == 'standard'}" @click.prevent="changeMode('standard')"><i class="fa fa-calculator"></i> {{ __vac_translate('standard') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'scientific'}" @click.prevent="changeMode('scientific')"><i class="fa fa-flask"></i> {{ __vac_translate('scientific') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'date_calculation'}" @click.prevent="changeMode('date_calculation')"><i class="fa fa-calendar-alt"></i> {{ __vac_translate('date_calculation') }}</a></li>
+					<br>
+					<h5 class="font-weight-bold text-muted h6" style="font-size:3rem;">{{ __vac_translate('converter') }}</h5>
+					<!-- <li><a href="#" :class="{active: mode == 'currency'}" @click.prevent="changeMode('currency')"><i class="fa fa-dollar-sign"></i> {{ __vac_translate('currency') }}</a></li> -->
+					<li><a href="#" :class="{active: mode == 'volume'}" @click.prevent="changeMode('volume')"><i class="fa fa-cube"></i> {{ __vac_translate('volume') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'length'}" @click.prevent="changeMode('length')"><i class="fa fa-ruler-combined"></i> {{ __vac_translate('length') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'weight_and_mass'}" @click.prevent="changeMode('weight_and_mass')"><i class="fa fa-weight-hanging"></i> {{ __vac_translate('weight_and_mass') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'temperature'}" @click.prevent="changeMode('temperature')"><i class="fa fa-thermometer-half"></i> {{ __vac_translate('temperature') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'energy'}" @click.prevent="changeMode('energy')"><i class="fa fa-fire"></i> {{ __vac_translate('energy') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'area'}" @click.prevent="changeMode('area')"><i class="fa fa-th"></i> {{ __vac_translate('area') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'hour'}" @click.prevent="changeMode('hour')"><i class="fa fa-clock"></i> {{ __vac_translate('hour') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'power'}" @click.prevent="changeMode('power')"><i class="fa fa-bolt"></i> {{ __vac_translate('power') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'data'}" @click.prevent="changeMode('data')"><i class="fa fa-hdd"></i> {{ __vac_translate('data') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'pressure'}" @click.prevent="changeMode('pressure')"><i class="fa fa-tachometer-alt"></i> {{ __vac_translate('pressure') }}</a></li>
+					<li><a href="#" :class="{active: mode == 'angle'}" @click.prevent="changeMode('angle')"><i class="fa fa-less-than"></i> {{ __vac_translate('angle') }}</a></li>
+				</ul>
+			</div>
+			<div class="vac-sidebar-footer p-1 w-100">
+				<div class="btn-group w-100 btn-group-block">
+					<button class="btn btn-sm btn-light btn-block fs-3"  @click="open_about = !open_about, open_sidebar = ! open_sidebar" type="button">{{ __vac_translate('about') }}</button>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Page Content  -->
+		<div class="vac-content w-100 p-1">
+			<div class="d-flex justify-content-between mb-1">
+				<button class="btn btn-sm btn-secondary m-3" @click="open_sidebar = !open_sidebar"><i class="fa fa-bars"></i></button>
+				<div class="text-right m-3">
+					<h4 class="font-weight-bold h5">{{ __vac_translate(mode) }}</h4>
+					<h5 class="font-weight-bold text-muted small m-0">{{ title }}</h5>
+				</div>
+				<!-- <button class="btn btn-sm btn-light m-3"><i class="fa fa-undo"></i></button> -->
+			</div>
+
+			<date-calculation 	:locale="locale" :id="id" v-if="mode == 'date_calculation'" />
+			<weight-and-mass  	:locale="locale" :id="id" v-else-if="mode == 'weight_and_mass'" />
+			<data-converter   	:locale="locale" :id="id" v-else-if="mode == 'data'" />
+			<area-converter 	:locale="locale" :id="id" v-else-if="mode == 'area'" />
+			<component 			:locale="locale" :id="id" v-else :is="mode" />
+		</div>
+	</div>
+</template>
+
+<script>
+import DateCalculation from './components/calculators/DateCalculation.vue'
+import Scientific from './components/calculators/Scientific.vue'
+import Standard from './components/calculators/Standard.vue'
+import Area from './components/converters/Area.vue'
+import Data from './components/converters/Data.vue'
+import Hour from './components/converters/Hour.vue'
+import Length from './components/converters/Length.vue'
+import Temperature from './components/converters/Temperature.vue'
+import Energy from './components/converters/Energy.vue'
+import Volume from './components/converters/Volume.vue'
+import WeightAndMass from './components/converters/WeightAndMass.vue'
+import Angle from './components/converters/Angle.vue'
+import Pressure from './components/converters/Pressure.vue'
+import Power from './components/converters/Power.vue'
+import vac from './mixins/vac'
+export default {
+	name: "VueAdvancedCalculator",
+  	components: {
+		Standard,
+		Scientific,
+		DateCalculation,
+		DataConverter: Data,
+		Hour,
+		WeightAndMass,
+		AreaConverter: Area,
+		Length,
+		Volume,
+		Temperature,
+		Energy,
+		Angle,
+		Pressure,
+		Power
+},
+	mixins: [vac],
+	props: {
+		id: {type: String, default: 'vac-' + (new Date).getTime() },
+		title: {type: String, default: 'Advanced Calculator'},
+		description: {type: String, default: 'An advanced scientific calculator'},
+		defaultMode: {type: String, default: 'standard'},
+		locale: {type: String, default: 'fr'}
+	},
+	data: () => ({
+		open_sidebar: false,
+		open_about: false,
+		mode: '',
+	}),
+
+	mounted() {
+		this.mode = this.defaultMode
+	},
+
+	methods: {
+		/**
+		 * Change le type de calculatrice
+		 * 
+		 * @param {String} mode
+		 */
+		changeMode(mode) {
+			this.mode = mode 
+			this.open_sidebar = false
+		}
+	}
+}
+</script>
+
+<style scoped>
+@import url('./assets/styles/core.css');
+@import url('./assets/vue-advanced-calculator.min.css');
+@import url('./assets/fontawesome-free/css/all.min.css');
+</style>
